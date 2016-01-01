@@ -1,0 +1,29 @@
+data:
+  image: cogniteev/echo:latest
+  volumes:
+   - /var/www:/var/www
+   - /var/lib/mysql
+   - /var/log/nginx
+   - /var/log/supervisor
+
+db:
+  image: mariadb:latest
+  ports:
+   - "3306:3306"
+  volumes_from:
+   - data
+  environment:
+   - MYSQL_ROOT_PASSWORD=root
+   - MYSQL_USER=user
+   - MYSQL_PASSWORD=user
+   - MYSQL_DATABASE=database
+
+web:
+  build: .
+  links:
+   - db
+  ports:
+   - "80:80"
+   - "443:443"
+  volumes_from:
+   - data
